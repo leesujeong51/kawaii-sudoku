@@ -1,0 +1,741 @@
+/* =========================================================
+   Kawaii Sudoku Princess - Ultimate Pastel Pink Design System
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800;900&family=Nunito:wght@600;700;800;900&display=swap');
+
+:root {
+    --primary-pink: #FF8DA1;
+    --deep-pink: #FF6584;
+    --dark-pink: #D84266;
+    --soft-pink: #FFF0F4;
+    --pastel-bg: #FFF4F7;
+    --card-border: #FFD2DC;
+    --accent-purple: #C8B6FF;
+    --baby-blue: #BCE7FD;
+    --mint: #A8E6CF;
+    --gold: #FFD166;
+    --text-dark: #563346;
+    --text-muted: #8E657B;
+    --grid-bg: #FFF9FA;
+    --cell-bg: #FFFFFF;
+    --cell-border: #FFDCE4;
+    --cell-subgrid: #FF7590;
+    --cell-selected: #FFE4EC;
+    --cell-highlight: #FFF5F7;
+    --cell-same-num: #EAE0FF;
+    --cell-error: #FFD2D2;
+    --cell-given: #543444;
+    --cell-user: #FF5A7D;
+    --cell-note: #A07F92;
+    --shadow-jelly: 0 6px 0 #E25072, 0 10px 20px rgba(255, 101, 132, 0.35);
+    --shadow-soft: 0 8px 24px rgba(255, 141, 161, 0.25);
+    --shadow-sm: 0 3px 8px rgba(255, 101, 132, 0.18);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+body {
+    font-family: 'M PLUS Rounded 1c', 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #FFF0F5 0%, #FFE6EE 50%, #FFDCE8 100%);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+#sakura-bg-canvas, #fx-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+}
+
+#sakura-bg-canvas { z-index: 1; }
+#fx-canvas { z-index: 100; }
+
+/* Main App Frame (Mobile Container) */
+.app-wrapper {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 440px;
+    height: 100vh;
+    max-height: 920px;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 3.5px solid var(--card-border);
+    border-radius: 38px;
+    box-shadow: 0 20px 48px rgba(255, 101, 132, 0.28);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+@media (max-width: 480px) {
+    .app-wrapper {
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        border: none;
+    }
+}
+
+/* Screen Manager */
+.app-screen {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.app-screen.active {
+    display: flex;
+}
+
+/* Top App Header Bar */
+.header-bar {
+    padding: 12px 14px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 2.5px solid var(--card-border);
+    gap: 8px;
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #FFFFFF;
+    border: 2.5px solid var(--card-border);
+    border-radius: 22px;
+    padding: 6px 12px;
+    font-size: 0.96rem;
+    font-weight: 900;
+    box-shadow: 0 4px 10px rgba(255, 101, 132, 0.15);
+}
+
+.stat-pill .icon {
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.stat-pill.heart-pill {
+    border-color: #FFB7C5;
+    color: var(--deep-pink);
+}
+
+.stat-pill.heart-pill .hearts-count-val {
+    font-size: 1.1rem;
+    font-weight: 900;
+}
+
+.stat-pill .heart-timer-val {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    font-weight: 800;
+    background: #FFF0F4;
+    padding: 2px 7px;
+    border-radius: 12px;
+    border: 1px solid #FFD2DC;
+    letter-spacing: -0.2px;
+}
+
+.stat-pill.gem-pill {
+    border-color: #C8B6FF;
+    color: #7B42BC;
+}
+
+.stat-pill.gem-pill .gems-count-val {
+    font-size: 1.1rem;
+    font-weight: 900;
+}
+
+.stat-pill.stars-pill {
+    border-color: #FFD166;
+    color: #D48806;
+}
+
+.stat-pill.stars-pill #total-stars-val {
+    font-size: 1.05rem;
+    font-weight: 900;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2.5px solid var(--card-border);
+    background: #FFFFFF;
+    color: var(--text-dark);
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(255, 101, 132, 0.18);
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.icon-btn:active {
+    transform: scale(0.88);
+}
+
+/* =========================================================
+   1. LOBBY & ROADMAP VIEW STYLING
+   ========================================================= */
+
+.lobby-content-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px 14px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.lobby-content-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+.lobby-content-scroll::-webkit-scrollbar-thumb {
+    background: var(--card-border);
+    border-radius: 10px;
+}
+
+/* Lobby Hero / Greeting Card */
+.lobby-hero-card {
+    flex-shrink: 0;
+    width: 100%;
+    min-height: 108px;
+    background: linear-gradient(135deg, #FFF0F5 0%, #FFE5EE 100%);
+    border: 2.5px solid var(--card-border);
+    border-radius: 26px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 12px rgba(255, 101, 132, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.lobby-hero-card::after {
+    content: '🌸';
+    position: absolute;
+    right: -10px;
+    bottom: -10px;
+    font-size: 4.5rem;
+    opacity: 0.15;
+    pointer-events: none;
+}
+
+.mascot-avatar-container {
+    width: 84px;
+    height: 84px;
+    min-width: 84px;
+    min-height: 84px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.mascot-avatar-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(255, 101, 132, 0.35));
+}
+
+.hero-text-col {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.app-title-badge {
+    font-size: 1.22rem;
+    font-weight: 900;
+    color: var(--deep-pink);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.speech-bubble-sync {
+    background: #FFFFFF;
+    border: 2px solid var(--primary-pink);
+    border-radius: 14px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1.38;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+}
+
+/* Quick Play Banner Button */
+.btn-quick-play-banner {
+    flex-shrink: 0;
+    width: 100%;
+    min-height: 52px;
+    background: linear-gradient(135deg, #FF8DA1 0%, #FF5A7D 100%);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 20px;
+    padding: 12px 20px;
+    font-size: 1.05rem;
+    font-weight: 900;
+    box-shadow: var(--shadow-jelly);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-quick-play-banner:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #E25072;
+}
+
+/* Roadmap Winding Path Container */
+.roadmap-section {
+    flex-shrink: 0;
+    width: 100%;
+    position: relative;
+    background: rgba(255, 255, 255, 0.7);
+    border: 2px dashed var(--card-border);
+    border-radius: 26px;
+    padding: 16px 12px;
+}
+
+.welcome-freepass-banner {
+    background: linear-gradient(135deg, #FFF0F5 0%, #FFE3EC 100%);
+    border: 2px solid #FF8DA1;
+    border-radius: 16px;
+    padding: 10px 14px;
+    font-size: 0.84rem;
+    font-weight: 800;
+    color: #D84266;
+    text-align: center;
+    line-height: 1.4;
+    box-shadow: 0 4px 12px rgba(255, 101, 132, 0.15);
+    margin-bottom: 12px;
+}
+
+.freepass-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, #FF6584 0%, #FF8DA1 100%);
+    color: #FFFFFF;
+    font-size: 0.68rem;
+    font-weight: 900;
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-left: 5px;
+    vertical-align: middle;
+    box-shadow: 0 2px 4px rgba(255, 101, 132, 0.3);
+}
+
+.world-divider-badge {
+    background: linear-gradient(135deg, #C8B6FF 0%, #FF8DA1 100%);
+    color: #FFFFFF;
+    font-size: 0.82rem;
+    font-weight: 900;
+    text-align: center;
+    padding: 6px 12px;
+    border-radius: 16px;
+    box-shadow: 0 3px 0 #9E86E8;
+    margin: 12px 0 16px;
+}
+
+.roadmap-stages-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    position: relative;
+}
+
+/* Stage Node Cards (S-Curve road) */
+.roadmap-node {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.roadmap-node.align-left { align-self: flex-start; }
+.roadmap-node.align-center { align-self: center; }
+.roadmap-node.align-right { align-self: flex-end; }
+
+.roadmap-node:active {
+    transform: scale(0.94);
+}
+
+.node-circle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 3.5px solid var(--primary-pink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: var(--deep-pink);
+    box-shadow: var(--shadow-jelly);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.roadmap-node.cleared .node-circle {
+    background: linear-gradient(135deg, #FF8DA1, #FF5A7D);
+    color: #FFFFFF;
+    border-color: #FFFFFF;
+}
+
+.roadmap-node.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.roadmap-node.locked .node-circle {
+    background: #EFEFEF;
+    border-color: #CCC;
+    color: #999;
+    box-shadow: none;
+}
+
+.node-details {
+    background: #FFFFFF;
+    border: 2px solid var(--card-border);
+    border-radius: 16px;
+    padding: 6px 12px;
+    box-shadow: var(--shadow-sm);
+    min-width: 140px;
+}
+
+.node-title {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--text-dark);
+}
+
+.node-stars {
+    display: flex;
+    gap: 2px;
+    margin-top: 2px;
+}
+
+.star-icon {
+    font-size: 0.95rem;
+    color: #E2E2E2;
+}
+.star-icon.earned {
+    color: #FFD166;
+    text-shadow: 0 1px 2px rgba(255, 209, 102, 0.6);
+}
+
+/* Mascot Marker on current active stage */
+.cur-mascot-marker {
+    position: absolute;
+    top: -38px;
+    left: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: bounceMascot 1s infinite;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.marker-speech {
+    background: var(--deep-pink);
+    color: #FFFFFF;
+    font-size: 0.68rem;
+    font-weight: 900;
+    padding: 2px 6px;
+    border-radius: 8px;
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+}
+
+.marker-owl {
+    font-size: 1.2rem;
+}
+
+/* =========================================================
+   2. INGAME PUZZLE VIEW STYLING
+   ========================================================= */
+
+.ingame-top-nav {
+    padding: 8px 14px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stage-title-pill {
+    background: linear-gradient(135deg, #FF8DA1, #FF5A7D);
+    color: #FFFFFF;
+    font-size: 0.82rem;
+    font-weight: 900;
+    padding: 5px 14px;
+    border-radius: 16px;
+    box-shadow: 0 3px 0 #D84266;
+}
+
+.timer-box {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #FFFFFF;
+    border: 2px solid var(--card-border);
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-size: 0.85rem;
+    font-weight: 900;
+    color: var(--text-dark);
+}
+.timer-box.time-bonus {
+    color: #00A86B;
+    border-color: var(--mint);
+}
+
+/* Sudoku Board Grid Container */
+.board-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 12px;
+}
+
+.sudoku-grid {
+    display: grid;
+    background: var(--grid-bg);
+    border: 3.5px solid var(--deep-pink);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-width: 360px;
+}
+
+.sudoku-grid.size-4 { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); }
+.sudoku-grid.size-6 { grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(6, 1fr); }
+.sudoku-grid.size-9 { grid-template-columns: repeat(9, 1fr); grid-template-rows: repeat(9, 1fr); }
+
+.sudoku-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cell-bg);
+    border: 1px solid var(--cell-border);
+    font-size: 1.55rem;
+    font-weight: 900;
+    color: var(--cell-user);
+    position: relative;
+    cursor: pointer;
+    transition: background 0.12s, transform 0.1s;
+}
+
+.sudoku-grid.size-6 .sudoku-cell { font-size: 1.3rem; }
+.sudoku-grid.size-9 .sudoku-cell { font-size: 1.15rem; }
+
+.sudoku-cell.given { color: var(--cell-given); font-weight: 800; }
+.sudoku-cell.selected { background: var(--cell-selected) !important; box-shadow: inset 0 0 0 2.5px var(--deep-pink); }
+.sudoku-cell.highlighted { background: var(--cell-highlight); }
+.sudoku-cell.same-number { background: var(--cell-same-num) !important; }
+.sudoku-cell.error { background: var(--cell-error) !important; color: #E63946 !important; }
+
+/* Subgrid Borders */
+.sudoku-grid.size-4 .sudoku-cell:nth-child(2n) { border-right: 2.5px solid var(--deep-pink); }
+.sudoku-grid.size-4 .sudoku-cell:nth-child(n+5):nth-child(-n+8) { border-bottom: 2.5px solid var(--deep-pink); }
+
+.sudoku-grid.size-6 .sudoku-cell:nth-child(3n) { border-right: 2.5px solid var(--deep-pink); }
+.sudoku-grid.size-6 .sudoku-cell:nth-child(n+7):nth-child(-n+12),
+.sudoku-grid.size-6 .sudoku-cell:nth-child(n+19):nth-child(-n+24),
+.sudoku-grid.size-6 .sudoku-cell:nth-child(n+31):nth-child(-n+36) { border-bottom: 2.5px solid var(--deep-pink); }
+
+.sudoku-grid.size-9 .sudoku-cell:nth-child(3n) { border-right: 2px solid var(--deep-pink); }
+.sudoku-grid.size-9 .sudoku-cell:nth-child(n+19):nth-child(-n+27),
+.sudoku-grid.size-9 .sudoku-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid var(--deep-pink); }
+
+/* Candidate Notes */
+.cell-notes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 100%;
+    height: 100%;
+    padding: 2px;
+    pointer-events: none;
+}
+.note-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.58rem;
+    font-weight: 700;
+    color: var(--cell-note);
+}
+
+/* Ingame Controls Bar */
+.controls-bar {
+    display: flex;
+    justify-content: space-around;
+    padding: 4px 16px 2px;
+}
+
+.control-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-dark);
+}
+
+.control-btn .circle-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 2.5px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.control-btn.active .circle-icon {
+    background: var(--deep-pink);
+    color: #FFFFFF;
+    border-color: var(--deep-pink);
+}
+
+.control-btn:active .circle-icon { transform: scale(0.9); }
+.control-btn .label { font-size: 0.72rem; font-weight: 800; color: var(--text-muted); }
+.control-btn .badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--deep-pink);
+    color: #FFFFFF;
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 1px 5px;
+    border-radius: 10px;
+    border: 2px solid #FFFFFF;
+}
+
+/* Number Pad Bar */
+.numpad-bar {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 4px 12px 8px;
+}
+
+.num-btn {
+    flex: 1;
+    max-width: 44px;
+    height: 48px;
+    background: #FFFFFF;
+    border: 2.5px solid var(--primary-pink);
+    border-radius: 14px;
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: var(--deep-pink);
+    box-shadow: var(--shadow-jelly);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.num-btn .count-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-top: -2px;
+}
+
+.num-btn:active { transform: scale(0.92); background: var(--soft-pink); }
+.num-btn.completed { opacity: 0.35; pointer-events: none; background: #F0F0F0; border-color: #DDD; }
+
+/* AdMob Banner Container */
+.admob-banner-container {
+    width: 100%;
+    height: 52px;
+    background: #FAFAFA;
+    border-top: 1.5px solid #F0E0E6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admob-test-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 320px;
+    height: 48px;
+    background: #FFFFFF;
+    border: 1px dashed #FFB7C5;
+    border-radius: 8px;
+    padding: 0 10px;
+}
+
+.admob-badge {
+    font-size: 0.6rem;
+    font-weight: 800;
+    color: #888;
+    background: #EEEEEE;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.admob-content-preview {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
