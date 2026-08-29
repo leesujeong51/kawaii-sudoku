@@ -1865,7 +1865,7 @@ body {
                 최고 기록: ★★★
             </div>
             <button class="btn-primary" id="btn-confirm-start-stage">💖 시작하기</button>
-            <button class="btn-secondary" onclick="stageLaunchModal.classList.remove('active')">닫기</button>
+            <button class="btn-secondary" onclick="document.getElementById('stage-launch-modal').classList.remove('active')">닫기</button>
         </div>
     </div>
 
@@ -2601,7 +2601,6 @@ class WordHuntEngine {
         this.stageOrder = Object.keys(this.stageConfigs);
     }
 
-    // Pick unique random words for a stage
     getStageWords(stageId) {
         const config = this.stageConfigs[stageId] || this.stageConfigs['1-1'];
         const wordPool = [...this.dictionaries[config.dict]];
@@ -2614,14 +2613,11 @@ class WordHuntEngine {
         return selected;
     }
 
-    // Generate 6x6 or 9x9 Grid with scattered target word letters & random decoys
     generatePuzzle(size, lang, targetWord) {
         const total = size * size;
         const letters = targetWord.split('');
         
-        // Pick random distinct positions for the target letters
         const availableIndices = Array.from({ length: total }, (_, i) => i);
-        // Shuffle
         for (let i = availableIndices.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [availableIndices[i], availableIndices[j]] = [availableIndices[j], availableIndices[i]];
@@ -2636,14 +2632,12 @@ class WordHuntEngine {
             found: false
         }));
 
-        // Place target word letters in sequence
         targetPositions.forEach((pos, idx) => {
             cells[pos].char = letters[idx];
             cells[pos].isTarget = true;
             cells[pos].targetOrder = idx;
         });
 
-        // Fill remaining cells with random decoy letters
         const alphabet = lang === 'ko' ? this.koreanAlphabet : this.englishAlphabet;
         for (let i = 0; i < total; i++) {
             if (!cells[i].char) {
@@ -3913,6 +3907,16 @@ window.AdMobManager = AdMobManager;
  * Kawaii Sudoku & 썸링크 (SumLink) Hub - Main Application Controller
  */
 document.addEventListener('DOMContentLoaded', () => {
+    // Safe Event Listener Helper
+    function safeAddListener(id, event, handler) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener(event, handler);
+        } else {
+            console.warn(`[SafeListener] Element with id "${id}" not found.`);
+        }
+    }
+
     window.soundManager = new SoundManager();
     window.particleSystem = new ParticleSystem('sakura-bg-canvas', 'fx-canvas');
     window.mascotManager = new MascotManager();
@@ -3923,22 +3927,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const appWrapper = document.querySelector('.app-wrapper');
 
-    // Screens
+    // All Screens
     const screenHub = document.getElementById('screen-hub');
     const screenSudokuLobby = document.getElementById('screen-sudoku-lobby');
     const screenSudokuGame = document.getElementById('screen-sudoku-game');
     const screenMakeSumLobby = document.getElementById('screen-makesum-lobby');
     const screenMakeSumGame = document.getElementById('screen-makesum-game');
+    const screenWordHuntLobby = document.getElementById('screen-wordhunt-lobby');
+    const screenWordHuntGame = document.getElementById('screen-wordhunt-game');
 
     // Header Stats
     const heartsCountElems = document.querySelectorAll('.hearts-count-val');
     const heartTimerElems = document.querySelectorAll('.heart-timer-val');
     const gemsCountElems = document.querySelectorAll('.gems-count-val');
     const sumlinkHeartsCountElems = document.querySelectorAll('.sumlink-hearts-count-val');
+    const wordhuntHeartsCountElems = document.querySelectorAll('.wordhunt-hearts-count-val');
     const hubStarsElem = document.getElementById('hub-stars-val');
     const sudokuStarsElem = document.getElementById('sudoku-stars-val');
     const makeSumStarsElem = document.getElementById('makesum-stars-val');
+    const wordHuntStarsElem = document.getElementById('wordhunt-stars-val');
     const hubHomeBtns = document.querySelectorAll('.btn-hub-home');
+
+    // Global WordHunt State Variables
+    let wordHuntStageId = '1-1';
+    let wordHuntStageDef = null;
+    let wordHuntStageWords = [];
+    let wordHuntCurrentWordIdx = 0;
+    let wordHuntPuzzleData = null;
+    let wordHuntExpectedLetterIdx = 0;
+    let wordHuntScore = 0;
+    let wordHuntElapsedSeconds = 0;
+    let wordHuntTimerSeconds = 40;
+    let wordHuntTimerInterval = null;
+    let wordHuntIsPaused = false;
 
     // Common Modals
     const pauseModal = document.getElementById('pause-modal');
@@ -3952,7 +3973,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------------
     let currentActiveGame = 'hub';
 
-    function updateHeaderStats() {
+        function updateHeaderStats() {
         economy.checkMidnightReset();
         heartsCountElems.forEach(el => { el.textContent = economy.state.hearts; });
         sumlinkHeartsCountElems.forEach(el => { el.textContent = `${economy.state.sumlinkHearts}/3`; });
@@ -3962,10 +3983,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hubStarsElem) hubStarsElem.textContent = `${economy.totalHubStars}⭐`;
         if (sudokuStarsElem) sudokuStarsElem.textContent = `${economy.state.sudoku.totalStars}/60`;
         if (makeSumStarsElem) makeSumStarsElem.textContent = `${economy.state.makesum.totalStars}/60`;
-        const whHearts = document.querySelectorAll('.wordhunt-hearts-count-val');
-        whHearts.forEach(el => { el.textContent = `${economy.state.wordhuntHearts}/3`; });
-        const whStars = document.getElementById('wordhunt-stars-val');
-        if (whStars) whStars.textContent = `${economy.state.wordhunt.totalStars}/60`;
+        if (wordHuntStarsElem) wordHuntStarsElem.textContent = `${economy.state.wordhunt.totalStars}/60`;
+        wordhuntHeartsCountElems.forEach(el => { el.textContent = `${economy.state.wordhuntHearts}/3`; });
     }
 
     setInterval(() => {
@@ -4009,19 +4028,28 @@ document.addEventListener('DOMContentLoaded', () => {
         updateHeaderStats();
     }
 
-    // Hub Card Event Handlers
-    document.getElementById('card-open-sudoku').addEventListener('click', () => {
-        soundManager.playTileSelect();
-        showScreen('sudoku-lobby');
-    });
-    document.getElementById('card-open-makesum').addEventListener('click', () => {
-        soundManager.playTileSelect();
-        showScreen('makesum-lobby');
-    });
-    document.getElementById('card-open-comingsoon').addEventListener('click', () => {
-        soundManager.playTileSelect();
-        mascotManager.setState('thinking', '기억력 & 사칙연산 퍼즐도 곧 찾아옵니다! ✨');
-    });
+    // Hub Card Event Handlers (Safe Check)
+    const cardSudoku = document.getElementById('card-open-sudoku');
+    if (cardSudoku) {
+        cardSudoku.addEventListener('click', () => {
+            soundManager.playTileSelect();
+            showScreen('sudoku-lobby');
+        });
+    }
+    const cardMakeSum = document.getElementById('card-open-makesum');
+    if (cardMakeSum) {
+        cardMakeSum.addEventListener('click', () => {
+            soundManager.playTileSelect();
+            showScreen('makesum-lobby');
+        });
+    }
+    const cardWordHunt = document.getElementById('card-open-wordhunt');
+    if (cardWordHunt) {
+        cardWordHunt.addEventListener('click', () => {
+            soundManager.playTileSelect();
+            showScreen('wordhunt-lobby');
+        });
+    }
 
     hubHomeBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -4780,33 +4808,35 @@ document.addEventListener('DOMContentLoaded', () => {
             appWrapper.classList.add('euphoria-screen-glow');
         }
 
-        let res;
+                let res;
         function formatClearTime(sec) {
             const m = Math.floor(sec / 60);
             const s = sec % 60;
             return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
         }
 
+        const scoreElem = document.getElementById('clear-score-val');
+        const scoreLbl = document.getElementById('clear-score-lbl');
+        const timeElem = document.getElementById('clear-time-val');
+        const timeLbl = document.getElementById('clear-time-lbl');
+
         if (gameType === 'sudoku') {
             res = economy.completeSudokuStage(stageId, sudokuElapsedSeconds, sudokuMistakes);
-            document.getElementById('clear-time-val').textContent = formatClearTime(sudokuElapsedSeconds);
-            const scoreElem = document.getElementById('clear-score-val');
+            if (timeElem) timeElem.textContent = formatClearTime(sudokuElapsedSeconds);
+            if (timeLbl) timeLbl.textContent = '소요 시간 ⏱️';
             if (scoreElem) scoreElem.textContent = sudokuMistakes === 0 ? '노미스 🏆' : `실수 ${sudokuMistakes}회`;
-            const scoreLbl = document.getElementById('clear-score-lbl');
             if (scoreLbl) scoreLbl.textContent = '플레이 성과';
         } else if (gameType === 'wordhunt') {
             res = economy.completeWordHuntStage(stageId, wordHuntScore, wordHuntElapsedSeconds, wordHuntEngine.stageOrder);
-            document.getElementById('clear-time-val').textContent = formatClearTime(wordHuntElapsedSeconds);
-            const scoreElem = document.getElementById('clear-score-val');
+            if (timeElem) timeElem.textContent = formatClearTime(wordHuntElapsedSeconds);
+            if (timeLbl) timeLbl.textContent = '소요 시간 ⏱️';
             if (scoreElem) scoreElem.textContent = `${wordHuntScore.toLocaleString()}점`;
-            const scoreLbl = document.getElementById('clear-score-lbl');
             if (scoreLbl) scoreLbl.textContent = '최종 점수 ⭐';
         } else {
             res = economy.completeMakeSumStage(stageId, makeSumScore, makeSumElapsedSeconds, makeSumEngine.stageOrder);
-            document.getElementById('clear-time-val').textContent = formatClearTime(makeSumElapsedSeconds);
-            const scoreElem = document.getElementById('clear-score-val');
+            if (timeElem) timeElem.textContent = formatClearTime(makeSumElapsedSeconds);
+            if (timeLbl) timeLbl.textContent = '소요 시간 ⏱️';
             if (scoreElem) scoreElem.textContent = `${makeSumScore.toLocaleString()}점`;
-            const scoreLbl = document.getElementById('clear-score-lbl');
             if (scoreLbl) scoreLbl.textContent = '최종 점수 ⭐';
         }
         document.getElementById('clear-gems-val').textContent = `+${res.rewardGems} 💎`;
@@ -4900,7 +4930,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Item Boosters Handlers
-    document.getElementById('btn-ms-add').addEventListener('click', () => {
+    safeAddListener('btn-ms-add', 'click', () => {
         const isFreeAdd = makeSumCells.length < (makeSumEngine.maxFreeRows * makeSumEngine.cols);
 
         if (isFreeAdd) {
@@ -4926,7 +4956,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('btn-ms-hint').addEventListener('click', () => {
+    safeAddListener('btn-ms-hint', 'click', () => {
         const validMoves = makeSumEngine.findAllValidMoves(makeSumCells, makeSumStageDef.target);
         if (validMoves.length === 0) {
             soundManager.playWrong();
@@ -4948,7 +4978,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.getElementById('btn-ms-bomb').addEventListener('click', () => {
+    safeAddListener('btn-ms-bomb', 'click', () => {
         executeItemUsage('bombs', () => {
             soundManager.playTileSelect();
             makeSumItemMode = 'bomb';
@@ -4980,7 +5010,7 @@ document.addEventListener('DOMContentLoaded', () => {
         checkMakeSumVictory();
     }
 
-    document.getElementById('btn-ms-rocket').addEventListener('click', () => {
+    safeAddListener('btn-ms-rocket', 'click', () => {
         executeItemUsage('rockets', () => {
             soundManager.playTileSelect();
             makeSumItemMode = 'rocket';
@@ -5002,7 +5032,7 @@ document.addEventListener('DOMContentLoaded', () => {
         checkMakeSumVictory();
     }
 
-    document.getElementById('btn-ms-undo').addEventListener('click', () => {
+    safeAddListener('btn-ms-undo', 'click', () => {
         if (makeSumUndoStack.length > 0) {
             soundManager.playTileSelect();
             const last = makeSumUndoStack.pop();
@@ -5019,7 +5049,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('btn-ms-pause').addEventListener('click', () => {
+    safeAddListener('btn-ms-pause', 'click', () => {
         makeSumIsPaused = true;
         soundManager.playTileSelect();
         document.getElementById('pause-title').textContent = '잠시 쉬어가요 ☕';
@@ -5030,7 +5060,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseModal.classList.add('active');
     });
 
-    document.getElementById('btn-sudoku-pause').addEventListener('click', () => {
+    safeAddListener('btn-sudoku-pause', 'click', () => {
         sudokuIsPaused = true;
         soundManager.playTileSelect();
         document.getElementById('pause-title').textContent = '잠시 쉬어가요 ☕';
@@ -5041,23 +5071,23 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseModal.classList.add('active');
     });
 
-    document.getElementById('btn-quick-play-ms').addEventListener('click', () => {
+    safeAddListener('btn-quick-play-ms', 'click', () => {
         soundManager.playStageStart();
         openMakeSumLaunchModal(economy.state.makesum.currentStageId || '1-1');
     });
 
-    document.getElementById('btn-quick-play').addEventListener('click', () => {
+    safeAddListener('btn-quick-play', 'click', () => {
         soundManager.playStageStart();
         openSudokuLaunchModal(economy.state.sudoku.currentStageId || '1-1');
     });
 
-    document.getElementById('btn-note').addEventListener('click', () => {
+    safeAddListener('btn-note', 'click', () => {
         sudokuIsNoteMode = !sudokuIsNoteMode;
         sudokuNoteBtn.classList.toggle('active', sudokuIsNoteMode);
         soundManager.playTileSelect();
     });
 
-    document.getElementById('btn-erase').addEventListener('click', () => {
+    safeAddListener('btn-erase', 'click', () => {
         if (!sudokuSelectedCell) return;
         const { r, c } = sudokuSelectedCell;
         if (sudokuInitialBoard[r][c] === 0) {
@@ -5068,7 +5098,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('btn-hint').addEventListener('click', () => {
+    safeAddListener('btn-hint', 'click', () => {
         if (!sudokuSelectedCell) return;
         const { r, c } = sudokuSelectedCell;
         if (sudokuInitialBoard[r][c] === 0 && sudokuCurrentBoard[r][c] !== sudokuSolutionBoard[r][c]) {
@@ -5090,7 +5120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     soundManager.updateBgmButtonsUI();
 
     // Daily Attendance
-    document.getElementById('btn-claim-daily').addEventListener('click', () => {
+    safeAddListener('btn-claim-daily', 'click', () => {
         economy.claimDailyReward();
         soundManager.playGem();
         particleSystem.spawnSparkles(window.innerWidth / 2, window.innerHeight / 2, 30);
@@ -5112,7 +5142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         outOfHeartsModal.classList.add('active');
     }
 
-    document.getElementById('btn-buy-heart-gems').addEventListener('click', () => {
+    safeAddListener('btn-buy-heart-gems', 'click', () => {
         const res = economy.buyHeartWithGems(outOfHeartsTargetGame);
         if (res.success) {
             soundManager.playGem();
@@ -5124,7 +5154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('btn-ad-heart').addEventListener('click', () => {
+    safeAddListener('btn-ad-heart', 'click', () => {
         adMobManager.showRewardedVideo('heart', () => {
             economy.grantAdHeart(outOfHeartsTargetGame);
             updateHeaderStats();
@@ -5133,34 +5163,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.getElementById('close-out-modal').addEventListener('click', () => {
+    safeAddListener('close-out-modal', 'click', () => {
         outOfHeartsModal.classList.remove('active');
     });
 
-    // Initialize to Main Hub Screen!
-    showScreen('hub');
-});
+    
 
     // =============================================================
     // 4. KAWAII WORD HUNTER (단어 스펠링 찾기) CONTROLLER
     // =============================================================
     window.wordHuntEngine = new WordHuntEngine();
-
-    const screenWordHuntLobby = document.getElementById('screen-wordhunt-lobby');
-    const screenWordHuntGame = document.getElementById('screen-wordhunt-game');
-    const wordHuntStarsElem = document.getElementById('wordhunt-stars-val');
-
-    let wordHuntStageId = '1-1';
-    let wordHuntStageDef = null;
-    let wordHuntStageWords = [];
-    let wordHuntCurrentWordIdx = 0;
-    let wordHuntPuzzleData = null;
-    let wordHuntExpectedLetterIdx = 0;
-    let wordHuntScore = 0;
-    let wordHuntElapsedSeconds = 0;
-    let wordHuntTimerSeconds = 40;
-    let wordHuntTimerInterval = null;
-    let wordHuntIsPaused = false;
 
     const whGrid = document.getElementById('wordhunt-grid');
     const whTargetBox = document.getElementById('wh-target-box');
@@ -5461,21 +5473,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Word Hunt Item Handlers
-    document.getElementById('btn-wh-hint').addEventListener('click', () => {
+    safeAddListener('btn-wh-hint', 'click', () => {
         executeWordHuntItemUsage('hints', () => {
             soundManager.playGem();
-            const targetPos = wordHuntPuzzleData.targetPositions[wordHuntExpectedLetterIdx];
-            if (whGrid.children[targetPos]) {
-                whGrid.children[targetPos].classList.add('hint-pulse');
+            const hintPos = wordHuntPuzzleData.targetPositions[wordHuntExpectedLetterIdx];
+            if (whGrid.children[hintPos]) {
+                whGrid.children[hintPos].classList.add('hint-pulse');
                 setTimeout(() => {
-                    if (whGrid.children[targetPos]) whGrid.children[targetPos].classList.remove('hint-pulse');
+                    if (whGrid.children[hintPos]) whGrid.children[hintPos].classList.remove('hint-pulse');
                 }, 3000);
             }
             mascotManager.setState('happy', `반짝이는 칸에 [ ${wordHuntPuzzleData.letters[wordHuntExpectedLetterIdx]} ] 가 있어요! 💡`);
         });
     });
 
-    document.getElementById('btn-wh-time').addEventListener('click', () => {
+    safeAddListener('btn-wh-time', 'click', () => {
         executeWordHuntItemUsage('times', () => {
             soundManager.playGem();
             wordHuntTimerSeconds += 15;
@@ -5485,7 +5497,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.getElementById('btn-wh-bomb').addEventListener('click', () => {
+    safeAddListener('btn-wh-bomb', 'click', () => {
         executeWordHuntItemUsage('bombs', () => {
             soundManager.playBombBoom();
             // Clear 4 random decoy cells
@@ -5505,18 +5517,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.getElementById('btn-wh-skip').addEventListener('click', () => {
+    safeAddListener('btn-wh-skip', 'click', () => {
         executeWordHuntItemUsage('skips', () => {
             soundManager.playGem();
-            const targetPos = wordHuntPuzzleData.targetPositions[wordHuntExpectedLetterIdx];
-            const targetCell = wordHuntPuzzleData.cells[targetPos];
-            if (targetCell && whGrid.children[targetPos]) {
-                onWordHuntTileClick(targetPos, targetCell, whGrid.children[targetPos]);
+            const skipPos = wordHuntPuzzleData.targetPositions[wordHuntExpectedLetterIdx];
+            const targetCell = wordHuntPuzzleData.cells[skipPos];
+            if (targetCell && whGrid.children[skipPos]) {
+                onWordHuntTileClick(skipPos, targetCell, whGrid.children[skipPos]);
             }
         });
     });
 
-    document.getElementById('btn-wh-pause').addEventListener('click', () => {
+    safeAddListener('btn-wh-pause', 'click', () => {
         wordHuntIsPaused = true;
         soundManager.playTileSelect();
         document.getElementById('pause-title').textContent = '잠시 쉬어가요 ☕';
@@ -5527,10 +5539,18 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseModal.classList.add('active');
     });
 
-    document.getElementById('btn-quick-play-wh').addEventListener('click', () => {
+    safeAddListener('btn-quick-play-wh', 'click', () => {
         soundManager.playStageStart();
         openWordHuntLaunchModal(economy.state.wordhunt.currentStageId || '1-1');
     });
+
+    // =============================================================
+    // FINAL INITIALIZATION
+    // =============================================================
+    updateHeaderStats();
+    showScreen('hub');
+});
+
 
     </script>
 </body>
