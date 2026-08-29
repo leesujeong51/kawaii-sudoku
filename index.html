@@ -111,13 +111,15 @@ body {
 
 /* Header Bar */
 .header-bar {
-    padding: 12px 14px 10px;
+    padding: 8px 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(255, 255, 255, 0.95);
-    border-bottom: 2.5px solid var(--card-border);
-    gap: 8px;
+    background: rgba(255, 255, 255, 0.96);
+    border-bottom: 2px solid var(--card-border);
+    gap: 6px;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .header-left, .header-right {
@@ -129,44 +131,48 @@ body {
 .stat-pill {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     background: #FFFFFF;
-    border: 2.5px solid var(--card-border);
-    border-radius: 22px;
-    padding: 6px 12px;
-    font-size: 0.96rem;
+    border: 2px solid var(--card-border);
+    border-radius: 16px;
+    padding: 4px 8px;
+    font-size: 0.82rem;
     font-weight: 900;
-    box-shadow: 0 4px 10px rgba(255, 101, 132, 0.15);
+    box-shadow: 0 2px 6px rgba(255, 101, 132, 0.12);
+    white-space: nowrap;
+    flex-shrink: 1;
 }
 .stat-pill.heart-pill { border-color: #FFB7C5; color: var(--deep-pink); }
 .stat-pill.heart-pill .hearts-count-val { font-size: 1.1rem; font-weight: 900; }
 .stat-pill.sumlink-heart-pill { border-color: #38BDF8; color: #0284C7; }
 .stat-pill .heart-timer-val {
-    font-size: 0.76rem;
+    font-size: 0.68rem;
     color: var(--text-muted);
     font-weight: 800;
     background: #FFF0F4;
-    padding: 2px 7px;
-    border-radius: 12px;
+    padding: 1px 5px;
+    border-radius: 10px;
     border: 1px solid #FFD2DC;
 }
 .stat-pill.gem-pill { border-color: #C8B6FF; color: #7B42BC; }
 .stat-pill.stars-pill { border-color: #FFD166; color: #D48806; }
 
 .icon-btn {
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
     border-radius: 50%;
-    border: 2.5px solid var(--card-border);
+    border: 2px solid var(--card-border);
     background: #FFFFFF;
     color: var(--text-dark);
-    font-size: 1.25rem;
+    font-size: 1.05rem;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(255, 101, 132, 0.18);
+    box-shadow: 0 2px 6px rgba(255, 101, 132, 0.14);
     transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    flex-shrink: 0;
 }
 .icon-btn:active { transform: scale(0.88); }
 
