@@ -1201,7 +1201,7 @@ body {
                         <div class="hub-card-body">
                             <div class="hub-card-title">썸링크 (Sum Link)</div>
                             <div class="hub-card-desc">2~3개 숫자를 이어 합 10~30 만들기! 🎯</div>
-                            <div class="hub-card-badge">하루 3회 무료 플레이 • 합 10~30 지원 💖</div>
+                            <div class="hub-card-badge">하루 3회 무료 플레이 • 다채로운 숫자 매칭 💖</div>
                         </div>
                         <div class="hub-card-arrow">➔</div>
                     </div>
@@ -1345,7 +1345,7 @@ body {
                     <div class="hero-text-col">
                         <div class="app-title-badge" style="color:#0284C7;">🔢 썸링크 (Sum Link) 로드맵 🎯</div>
                         <div class="speech-bubble-sync bubble-pop">
-                            <span class="mascot-speech-sync">하루 3번! 2~3개 숫자로 합 10~30을 완성해봐요! 🌸</span>
+                            <span class="mascot-speech-sync">하루 3번! 다채로운 숫자로 합 10~30을 완성해봐요! 🌸</span>
                         </div>
                     </div>
                 </div>
@@ -1713,35 +1713,35 @@ if (typeof window !== 'undefined') {
 
 /**
  * Kawaii SumLink (썸링크) Engine
- * Implements 2-tile & 3-tile chaining with Line-of-Sight & Wrap-around algorithms.
- * Supports Dynamic Target Sums from 10 all the way up to 30!
+ * Implements Rich Diverse Board Generation, Smart Complementary Add-Numbers,
+ * Free-Angle 2D Continuous Raycast & Multi-Tile (2~3) Chaining up to Target 30!
  */
 class MakeSumEngine {
     constructor() {
         this.cols = 9;
         this.stageConfigs = {
-            // World 1: Target 10 ~ 12 (입문 & 2-3개 썸링크)
+            // World 1: Target 10 ~ 12 (입문 & 달콤 디저트)
             '1-1': { world: 1, target: 10, rows: 4, name: '1-1 딸기 모찌 🍓', desc: '합 10 만들기 (2개 또는 3개 연결)' },
-            '1-2': { world: 1, target: 10, rows: 4, name: '1-2 바닐라 컵케이크 🧁', desc: '인접 및 3연속 썸링크' },
+            '1-2': { world: 1, target: 10, rows: 4, name: '1-2 바닐라 컵케이크 🧁', desc: '다양한 숫자 & 3연속 썸링크' },
             '1-3': { world: 1, target: 11, rows: 5, name: '1-3 솜사탕 동산 🍬', desc: '목표: 합 11 만들기' },
-            '1-4': { world: 1, target: 11, rows: 5, name: '1-4 마카롱 파티 🍭', desc: '대각선 & 3개 조합 썸링크' },
+            '1-4': { world: 1, target: 11, rows: 5, name: '1-4 마카롱 파티 🍭', desc: '자유 각도 & 3개 조합 썸링크' },
             '1-5': { world: 1, target: 12, rows: 6, name: '1-5 루루의 디저트 왕관 👑', desc: '월드 1 마스터! (합 12)' },
             
-            // World 2: Target 14 ~ 18 (중급 & 3개 조합 확장)
+            // World 2: Target 14 ~ 18 (중급 & 벚꽃 숲)
             '2-1': { world: 2, target: 14, rows: 4, name: '2-1 벚꽃 티타임 🌸', desc: '목표: 합 14 썸링크 도전!' },
             '2-2': { world: 2, target: 15, rows: 5, name: '2-2 달콤 앵두 🍒', desc: '목표: 합 15 (3개 조합 마스터)' },
             '2-3': { world: 2, target: 16, rows: 5, name: '2-3 레인보우 푸딩 🍮', desc: '목표: 합 16 썸링크' },
             '2-4': { world: 2, target: 17, rows: 6, name: '2-4 별빛 버블 🫧', desc: '목표: 합 17 시야 확보' },
             '2-5': { world: 2, target: 18, rows: 6, name: '2-5 프린세스 윙 🪽', desc: '월드 2 마스터! (합 18)' },
 
-            // World 3: Target 20 ~ 24 (고급 & 3개 연속 썸링크)
+            // World 3: Target 20 ~ 24 (고급 & 크리스탈 팰리스)
             '3-1': { world: 3, target: 20, rows: 5, name: '3-1 크리스탈 회랑 💎', desc: '목표: 합 20 썸링크 정복!' },
             '3-2': { world: 3, target: 21, rows: 5, name: '3-2 루비 캔들 💖', desc: '목표: 합 21 (3개 숫자 전략)' },
             '3-3': { world: 3, target: 22, rows: 6, name: '3-3 에메랄드 분수 🍀', desc: '목표: 합 22 썸링크' },
             '3-4': { world: 3, target: 23, rows: 6, name: '3-4 사파이어 미로 🔷', desc: '목표: 합 23 고난이도' },
             '3-5': { world: 3, target: 24, rows: 7, name: '3-5 보석의 여왕 👑💎', desc: '월드 3 마스터! (합 24)' },
 
-            // World 4: Target 25 ~ 30 (최고난도 & 합 30 그랜드 챔피언)
+            // World 4: Target 25 ~ 30 (최고난도 & 은하수 마스터)
             '4-1': { world: 4, target: 25, rows: 5, name: '4-1 은하수 오로라 🌌', desc: '목표: 합 25 썸링크!' },
             '4-2': { world: 4, target: 26, rows: 6, name: '4-2 별의 나침반 🧭', desc: '목표: 합 26 두뇌 트레이닝' },
             '4-3': { world: 4, target: 28, rows: 6, name: '4-3 황금빛 티아라 🎀', desc: '목표: 합 28 마법 연결' },
@@ -1751,47 +1751,55 @@ class MakeSumEngine {
         this.stageOrder = Object.keys(this.stageConfigs);
     }
 
+    // Rich Diverse Initial Board Generator
     generateBoard(stageId) {
         const config = this.stageConfigs[stageId] || this.stageConfigs['1-1'];
         const totalCells = config.rows * this.cols;
         const target = config.target;
         const maxVal = target <= 12 ? 9 : (target <= 20 ? 12 : 15);
 
-        // 1. Generate Valid 2-Tuples and 3-Tuples summing to target
-        const validTuples = [];
-
-        // Pairs
+        // 1. Classic Diverse Pairs (e.g. 1+9, 2+8, 3+7, 4+6, 5+5)
+        const validPairs = [];
         for (let a = 1; a < target; a++) {
             const b = target - a;
             if (a <= maxVal && b <= maxVal) {
-                validTuples.push([a, b]);
+                validPairs.push([a, b]);
             }
         }
-        // Equal pairs (always valid)
+        // Equal pairs (e.g. 1+1, 2+2, 3+3...)
         for (let v = 1; v <= Math.min(9, maxVal); v++) {
-            validTuples.push([v, v]);
+            validPairs.push([v, v]);
         }
 
-        // Triplets
+        // 2. Dynamic Triplets (e.g. 2+3+5, 3+3+4, 1+4+5...)
+        const validTriplets = [];
         for (let a = 1; a <= maxVal; a++) {
             for (let b = 1; b <= maxVal; b++) {
                 const c = target - (a + b);
                 if (c >= 1 && c <= maxVal) {
-                    validTuples.push([a, b, c]);
+                    validTriplets.push([a, b, c]);
                 }
             }
         }
 
+        // 3. Build rich balanced pool
         const vals = [];
         while (vals.length < totalCells) {
-            const tuple = validTuples[Math.floor(Math.random() * validTuples.length)];
-            vals.push(...tuple);
+            if (Math.random() > 0.35 && validPairs.length > 0) {
+                const p = validPairs[Math.floor(Math.random() * validPairs.length)];
+                vals.push(...p);
+            } else if (validTriplets.length > 0) {
+                const t = validTriplets[Math.floor(Math.random() * validTriplets.length)];
+                vals.push(...t);
+            } else {
+                vals.push(Math.floor(Math.random() * maxVal) + 1);
+            }
         }
         vals.length = totalCells;
 
-        // Shuffle with some localized clusters for solvability
+        // Shuffle with some localized cluster placement so there are immediate fun matches
         for (let i = 0; i < vals.length; i++) {
-            if (Math.random() > 0.4 && i + 2 < vals.length) {
+            if (Math.random() > 0.45 && i + 2 < vals.length) {
                 const sw = i + (Math.floor(Math.random() * 3) + 1);
                 if (sw < vals.length) {
                     const t = vals[i];
@@ -1805,6 +1813,56 @@ class MakeSumEngine {
         return { config, cells, cols: this.cols };
     }
 
+    // Smart Add Numbers: Generates exciting complementary numbers matching active board tiles!
+    addNumbers(cells, targetSum = 10) {
+        const activeCells = cells.filter(c => !c.cleared);
+        if (activeCells.length === 0) return cells;
+
+        const maxVal = targetSum <= 12 ? 9 : (targetSum <= 20 ? 12 : 15);
+        const activeVals = activeCells.map(c => c.val);
+
+        // Find numbers needed to complement remaining tiles
+        const neededVals = [];
+        for (const v of activeVals) {
+            const diff = targetSum - v;
+            if (diff >= 1 && diff <= maxVal) {
+                neededVals.push(diff);
+            }
+            // Also add identical number for equal-matching
+            if (v <= maxVal) {
+                neededVals.push(v);
+            }
+        }
+
+        // Generate 1 full clean new row (9 tiles) or 2 rows
+        const numToAdd = this.cols;
+        const newVals = [];
+
+        while (newVals.length < numToAdd) {
+            if (neededVals.length > 0 && Math.random() > 0.4) {
+                const v = neededVals[Math.floor(Math.random() * neededVals.length)];
+                newVals.push(v);
+            } else {
+                // Add a fresh diverse pair summing to target
+                const a = Math.floor(Math.random() * (targetSum - 1)) + 1;
+                const b = targetSum - a;
+                if (a >= 1 && a <= maxVal && b >= 1 && b <= maxVal) {
+                    newVals.push(a);
+                    if (newVals.length < numToAdd) newVals.push(b);
+                } else {
+                    newVals.push(Math.floor(Math.random() * maxVal) + 1);
+                }
+            }
+        }
+
+        const newCells = [...cells];
+        for (const v of newVals) {
+            newCells.push({ id: newCells.length, val: v, cleared: false });
+        }
+        return newCells;
+    }
+
+    // 6-Tier Connectivity Engine (Horizontal, Vertical, Diagonal, Wrap, 2D Raycast, 1-Bend L-Path)
     canConnect(idx1, idx2, cells) {
         if (idx1 === idx2) return null;
         if (idx1 < 0 || idx2 < 0 || idx1 >= cells.length || idx2 >= cells.length) return null;
@@ -1816,7 +1874,7 @@ class MakeSumEngine {
         const r2 = Math.floor(idx2 / cols);
         const c2 = idx2 % cols;
 
-        // 1. Horizontal Check
+        // 1. Direct Horizontal Check
         if (r1 === r2) {
             const minC = Math.min(c1, c2);
             const maxC = Math.max(c1, c2);
@@ -1830,7 +1888,7 @@ class MakeSumEngine {
             if (clear) return { type: 'horizontal', r1, c1, r2, c2 };
         }
 
-        // 2. Vertical Check
+        // 2. Direct Vertical Check
         if (c1 === c2) {
             const minR = Math.min(r1, r2);
             const maxR = Math.max(r1, r2);
@@ -1844,7 +1902,7 @@ class MakeSumEngine {
             if (clear) return { type: 'vertical', r1, c1, r2, c2 };
         }
 
-        // 3. Diagonal Check
+        // 3. Direct Diagonal Check (45-degree)
         if (Math.abs(r1 - r2) === Math.abs(c1 - c2)) {
             const stepR = r2 > r1 ? 1 : -1;
             const stepC = c2 > c1 ? 1 : -1;
@@ -1862,7 +1920,7 @@ class MakeSumEngine {
             if (clear) return { type: 'diagonal', r1, c1, r2, c2 };
         }
 
-        // 4. Sequential Wrap-Around
+        // 4. Sequential Wrap-Around (Reading order across rows)
         const minIdx = Math.min(idx1, idx2);
         const maxIdx = Math.max(idx1, idx2);
         let seqClear = true;
@@ -1874,14 +1932,102 @@ class MakeSumEngine {
         }
         if (seqClear) return { type: 'sequential', r1, c1, r2, c2 };
 
+        // 5. Continuous 2D Free-Angle Raycast (Liang-Barsky Line Clipping)
+        const p1x = c1 + 0.5;
+        const p1y = r1 + 0.5;
+        const p2x = c2 + 0.5;
+        const p2y = r2 + 0.5;
+        const dx = p2x - p1x;
+        const dy = p2y - p1y;
+
+        let rayClear = true;
+        const margin = 0.15;
+
+        for (let i = 0; i < cells.length; i++) {
+            if (cells[i].cleared || i === idx1 || i === idx2) continue;
+            const cr = Math.floor(i / cols);
+            const cc = i % cols;
+            const minX = cc + margin;
+            const maxX = cc + 1.0 - margin;
+            const minY = cr + margin;
+            const maxY = cr + 1.0 - margin;
+
+            const p = [-dx, dx, -dy, dy];
+            const q = [p1x - minX, maxX - p1x, p1y - minY, maxY - p1y];
+            let u1 = 0.0;
+            let u2 = 1.0;
+            let hit = true;
+
+            for (let k = 0; k < 4; k++) {
+                if (p[k] === 0) {
+                    if (q[k] < 0) { hit = false; break; }
+                } else {
+                    const t = q[k] / p[k];
+                    if (p[k] < 0) {
+                        if (t > u2) { hit = false; break; }
+                        if (t > u1) u1 = t;
+                    } else if (p[k] > 0) {
+                        if (t < u1) { hit = false; break; }
+                        if (t < u2) u2 = t;
+                    }
+                }
+            }
+            if (hit && u1 <= u2) {
+                rayClear = false;
+                break;
+            }
+        }
+
+        if (rayClear) {
+            return { type: 'raycast', r1, c1, r2, c2 };
+        }
+
+        // 6. 1-Bend L-Shape Path Check
+        const corner1Idx = r1 * cols + c2;
+        const corner2Idx = r2 * cols + c1;
+
+        if (cells[corner1Idx] && (cells[corner1Idx].cleared || corner1Idx === idx1 || corner1Idx === idx2)) {
+            let leg1 = true;
+            const minC = Math.min(c1, c2);
+            const maxC = Math.max(c1, c2);
+            for (let c = minC; c <= maxC; c++) {
+                const idx = r1 * cols + c;
+                if (idx !== idx1 && idx !== idx2 && !cells[idx].cleared) { leg1 = false; break; }
+            }
+            let leg2 = true;
+            const minR = Math.min(r1, r2);
+            const maxR = Math.max(r1, r2);
+            for (let r = minR; r <= maxR; r++) {
+                const idx = r * cols + c2;
+                if (idx !== idx1 && idx !== idx2 && !cells[idx].cleared) { leg2 = false; break; }
+            }
+            if (leg1 && leg2) return { type: 'corner', r1, c1, r2, c2, cr: r1, cc: c2 };
+        }
+
+        if (cells[corner2Idx] && (cells[corner2Idx].cleared || corner2Idx === idx1 || corner2Idx === idx2)) {
+            let leg1 = true;
+            const minR = Math.min(r1, r2);
+            const maxR = Math.max(r1, r2);
+            for (let r = minR; r <= maxR; r++) {
+                const idx = r * cols + c1;
+                if (idx !== idx1 && idx !== idx2 && !cells[idx].cleared) { leg1 = false; break; }
+            }
+            let leg2 = true;
+            const minC = Math.min(c1, c2);
+            const maxC = Math.max(c1, c2);
+            for (let c = minC; c <= maxC; c++) {
+                const idx = r2 * cols + c;
+                if (idx !== idx1 && idx !== idx2 && !cells[idx].cleared) { leg2 = false; break; }
+            }
+            if (leg1 && leg2) return { type: 'corner', r1, c1, r2, c2, cr: r2, cc: c1 };
+        }
+
         return null;
     }
 
-    // Check if 2 or 3 selected tiles form a valid link
     evaluateSelection(indices, cells, targetSum) {
         if (!indices || indices.length < 2 || indices.length > 3) return null;
 
-        // 2 Tiles Check
         if (indices.length === 2) {
             const [i1, i2] = indices;
             const conn = this.canConnect(i1, i2, cells);
@@ -1900,7 +2046,6 @@ class MakeSumEngine {
             return null;
         }
 
-        // 3 Tiles Check
         if (indices.length === 3) {
             const [i1, i2, i3] = indices;
             const conn1 = this.canConnect(i1, i2, cells);
@@ -1928,7 +2073,6 @@ class MakeSumEngine {
             if (!cells[i].cleared) active.push(i);
         }
 
-        // 1. Find 2-tile moves
         for (let a = 0; a < active.length; a++) {
             for (let b = a + 1; b < active.length; b++) {
                 const i = active[a];
@@ -1940,7 +2084,6 @@ class MakeSumEngine {
             }
         }
 
-        // 2. Find 3-tile moves
         for (let a = 0; a < active.length; a++) {
             for (let b = a + 1; b < active.length; b++) {
                 const i = active[a];
@@ -1957,16 +2100,6 @@ class MakeSumEngine {
         }
 
         return moves;
-    }
-
-    addNumbers(cells) {
-        const active = cells.filter(c => !c.cleared).map(c => c.val);
-        if (active.length === 0) return cells;
-        const newCells = [...cells];
-        for (const v of active) {
-            newCells.push({ id: newCells.length, val: v, cleared: false });
-        }
-        return newCells;
     }
 }
 window.MakeSumEngine = MakeSumEngine;
@@ -3982,7 +4115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-ms-add').addEventListener('click', () => {
         if (economy.useMakeSumItem('adds')) {
             soundManager.playStageStart();
-            makeSumCells = makeSumEngine.addNumbers(makeSumCells);
+            makeSumCells = makeSumEngine.addNumbers(makeSumCells, makeSumStageDef.target);
             updateMakeSumItemBadges();
             renderMakeSumGrid();
             particleSystem.spawnSparkles(window.innerWidth / 2, window.innerHeight * 0.7, 24);
