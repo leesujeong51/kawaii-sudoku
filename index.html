@@ -771,50 +771,63 @@ body {
     100% { transform: scale(0); opacity: 0; }
 }
 
-/* 썸링크 Items Tool Bar */
+/* 썸링크 Items Tool Bar (Roomy, Enlarged 4-Column Layout) */
 .makesum-items-bar {
     display: flex;
     justify-content: space-around;
-    padding: 8px 14px 10px;
-    background: rgba(255, 255, 255, 0.95);
-    border-top: 2px solid var(--card-border);
+    align-items: center;
+    padding: 10px 14px 14px;
+    background: rgba(255, 255, 255, 0.96);
+    border-top: 2.5px solid var(--card-border);
+    gap: 8px;
 }
 .ms-item-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3px;
+    gap: 4px;
     background: transparent;
     border: none;
     cursor: pointer;
+    flex: 1;
+    max-width: 82px;
+    padding: 0;
 }
 .ms-item-btn .item-circle {
-    width: 46px;
-    height: 46px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     background: #FFFFFF;
-    border: 2.5px solid var(--card-border);
+    border: 3px solid var(--card-border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.35rem;
-    box-shadow: var(--shadow-sm);
+    font-size: 1.6rem;
+    box-shadow: 0 4px 12px rgba(255, 101, 132, 0.18);
     position: relative;
-    transition: transform 0.15s;
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.ms-item-btn:active .item-circle { transform: scale(0.9); }
-.ms-item-btn .item-label { font-size: 0.72rem; font-weight: 800; color: var(--text-dark); }
-.ms-item-btn .item-badge {
+.ms-item-btn:active .item-circle {
+    transform: scale(0.88);
+}
+.ms-item-btn .item-label {
+    font-size: 0.82rem;
+    font-weight: 900;
+    color: var(--text-dark);
+    letter-spacing: -0.2px;
+}
+.item-badge {
     position: absolute;
-    top: -4px;
-    right: -4px;
+    top: -5px;
+    right: -6px;
     background: #FF5A7D;
     color: #FFFFFF;
-    font-size: 0.68rem;
+    font-size: 0.72rem;
     font-weight: 900;
-    padding: 1px 6px;
-    border-radius: 10px;
+    padding: 2px 7px;
+    border-radius: 12px;
     border: 2px solid #FFFFFF;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 /* AdMob Test Banner */
@@ -1272,6 +1285,69 @@ body {
     100% { box-shadow: 0 20px 48px rgba(255, 101, 132, 0.28); }
 }
 
+/* =========================================================
+   JUICY CONSECUTIVE COMBO POPUP ANIMATIONS
+   ========================================================= */
+.combo-popup-banner {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 100;
+    pointer-events: none;
+    font-size: 1.45rem;
+    font-weight: 900;
+    padding: 10px 22px;
+    border-radius: 30px;
+    color: #FFFFFF;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 10px 30px rgba(255, 77, 128, 0.5);
+    border: 3.5px solid #FFFFFF;
+    opacity: 0;
+    white-space: nowrap;
+}
+
+.combo-popup-banner.active-combo-2 {
+    background: linear-gradient(135deg, #FF8DA1 0%, #FF5A7D 100%);
+    animation: comboSlamPop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.combo-popup-banner.active-combo-3 {
+    background: linear-gradient(135deg, #F59E0B 0%, #EF4444 50%, #EC4899 100%);
+    font-size: 1.75rem;
+    animation: megaComboSlamPop 1.15s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.combo-popup-banner.active-combo-fever {
+    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 50%, #F59E0B 100%);
+    font-size: 1.95rem;
+    animation: feverComboSlamPop 1.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes comboSlamPop {
+    0% { transform: translate(-50%, -50%) scale(0.2) rotate(-6deg); opacity: 0; }
+    25% { transform: translate(-50%, -50%) scale(1.18) rotate(3deg); opacity: 1; }
+    40% { transform: translate(-50%, -50%) scale(1.0) rotate(0deg); opacity: 1; }
+    75% { transform: translate(-50%, -50%) scale(1.0) translateY(-10px); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.25) translateY(-25px); opacity: 0; }
+}
+
+@keyframes megaComboSlamPop {
+    0% { transform: translate(-50%, -50%) scale(0.1) rotate(-10deg); opacity: 0; filter: brightness(2); }
+    20% { transform: translate(-50%, -50%) scale(1.35) rotate(6deg); opacity: 1; filter: brightness(1.6); }
+    35% { transform: translate(-50%, -50%) scale(1.05) rotate(0deg); opacity: 1; filter: brightness(1); }
+    75% { transform: translate(-50%, -50%) scale(1.05) translateY(-14px); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.4) translateY(-35px); opacity: 0; }
+}
+
+@keyframes feverComboSlamPop {
+    0% { transform: translate(-50%, -50%) scale(0.1) rotate(14deg); opacity: 0; filter: brightness(2.5); }
+    20% { transform: translate(-50%, -50%) scale(1.45) rotate(-6deg); opacity: 1; filter: brightness(2); }
+    35% { transform: translate(-50%, -50%) scale(1.1) rotate(0deg); opacity: 1; filter: brightness(1); }
+    75% { transform: translate(-50%, -50%) scale(1.1) translateY(-16px); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.5) translateY(-40px); opacity: 0; }
+}
+
 /* Modals */
 .modal-overlay {
     position: fixed;
@@ -1445,7 +1521,6 @@ body {
                     <div class="stat-pill heart-pill">
                         <span>💖</span>
                         <span class="hearts-count-val">5</span>
-                        <span class="heart-timer-val">23:59:59</span>
                     </div>
                     <div class="stat-pill gem-pill">
                         <span>💎</span>
@@ -1572,7 +1647,7 @@ body {
         <div class="app-screen" id="screen-sudoku-game">
             <header class="header-bar">
                 <div class="header-left">
-                    <button class="icon-btn" id="btn-sudoku-back" onclick="document.getElementById('btn-sudoku-pause').click()">🏠</button>
+                    <button class="icon-btn" id="btn-sudoku-back" title="스도쿠 로드맵으로 나가기">🏠</button>
                     <button class="icon-btn" id="btn-sudoku-pause">⏸️</button>
                 </div>
                 <div class="header-right">
@@ -1611,7 +1686,6 @@ body {
                     <div class="stat-pill sumlink-heart-pill">
                         <span>💖</span>
                         <span class="sumlink-hearts-count-val">3/3</span>
-                        <span class="heart-timer-val">23:59:59</span>
                     </div>
                     <div class="stat-pill gem-pill">
                         <span>💎</span>
@@ -1657,7 +1731,7 @@ body {
         <div class="app-screen" id="screen-makesum-game">
             <header class="header-bar">
                 <div class="header-left">
-                    <button class="icon-btn" onclick="document.getElementById('btn-ms-pause').click()">🏠</button>
+                    <button class="icon-btn" id="btn-ms-back" title="썸링크 로드맵으로 나가기">🏠</button>
                     <button class="icon-btn" id="btn-ms-pause">⏸️</button>
                 </div>
                 <div class="header-right">
@@ -1691,6 +1765,7 @@ body {
                 <div class="makesum-grid-wrapper">
                     <canvas id="makesum-line-canvas"></canvas>
                     <div class="makesum-grid" id="makesum-grid"></div>
+                    <div id="ms-combo-popup" class="combo-popup-banner"></div>
                 </div>
             </main>
 
@@ -1706,10 +1781,6 @@ body {
                 <button class="ms-item-btn" id="btn-ms-bomb">
                     <div class="item-circle">💣<span class="item-badge" id="badge-ms-bomb">2</span></div>
                     <span class="item-label">폭탄</span>
-                </button>
-                <button class="ms-item-btn" id="btn-ms-rocket">
-                    <div class="item-circle">🚀<span class="item-badge" id="badge-ms-rocket">2</span></div>
-                    <span class="item-label">로켓</span>
                 </button>
                 <button class="ms-item-btn" id="btn-ms-undo">
                     <div class="item-circle">↩️</div>
@@ -1728,7 +1799,6 @@ body {
                     <div class="stat-pill heart-pill" style="border-color:#C084FC; color:#7E22CE;">
                         <span>💖</span>
                         <span class="wordhunt-hearts-count-val">3/3</span>
-                        <span class="heart-timer-val">23:59:59</span>
                     </div>
                     <div class="stat-pill gem-pill">
                         <span>💎</span>
@@ -1774,7 +1844,7 @@ body {
         <div class="app-screen" id="screen-wordhunt-game">
             <header class="header-bar">
                 <div class="header-left">
-                    <button class="icon-btn" onclick="document.getElementById('btn-wh-pause').click()">🏠</button>
+                    <button class="icon-btn" id="btn-wh-back" title="단어찾기 로드맵으로 나가기">🏠</button>
                     <button class="icon-btn" id="btn-wh-pause">⏸️</button>
                 </div>
                 <div class="header-right">
@@ -2638,10 +2708,14 @@ class WordHuntEngine {
             cells[pos].targetOrder = idx;
         });
 
-        const alphabet = lang === 'ko' ? this.koreanAlphabet : this.englishAlphabet;
+        // Filter out target word letters from decoy pool to avoid confusing decoys
+        const rawAlphabet = (lang === 'ko' ? this.koreanAlphabet : this.englishAlphabet).split('');
+        const decoyAlphabet = rawAlphabet.filter(c => !letters.includes(c));
+        const alphabetToUse = decoyAlphabet.length > 0 ? decoyAlphabet : rawAlphabet;
+
         for (let i = 0; i < total; i++) {
             if (!cells[i].char) {
-                cells[i].char = alphabet[Math.floor(Math.random() * alphabet.length)];
+                cells[i].char = alphabetToUse[Math.floor(Math.random() * alphabetToUse.length)];
             }
         }
 
@@ -2806,14 +2880,20 @@ class SoundManager {
         this.playTileSelect();
     }
 
-    playMatchCombo(combo = 1) {
+        playMatchCombo(combo = 1) {
         if (!this.soundEnabled || !this.ctx) return;
         this.ensureContext();
-        const scale = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50, 1174.66, 1318.51, 1567.98];
+
+        if (combo >= 3) {
+            this.playSuperCombo(combo);
+            return;
+        }
+
+        const scale = [523.25, 659.25, 783.99, 1046.50, 1318.51];
         const pitchIdx = Math.min(scale.length - 1, (combo - 1) % scale.length);
         const baseFreq = scale[pitchIdx];
 
-        const notes = [baseFreq, baseFreq * 1.25, baseFreq * 1.5, baseFreq * 2];
+        const notes = combo === 1 ? [baseFreq, baseFreq * 1.5, baseFreq * 2] : [baseFreq, baseFreq * 1.25, baseFreq * 1.5, baseFreq * 2, baseFreq * 2.5];
         notes.forEach((freq, idx) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
@@ -2821,14 +2901,67 @@ class SoundManager {
             const now = this.ctx.currentTime + idx * 0.035;
 
             osc.frequency.setValueAtTime(freq, now);
-            gain.gain.setValueAtTime(0.24, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+            gain.gain.setValueAtTime(combo === 1 ? 0.24 : 0.30, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
 
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.32);
+            osc.stop(now + 0.35);
         });
+    }
+
+    playSuperCombo(combo = 3) {
+        if (!this.soundEnabled || !this.ctx) return;
+        this.ensureContext();
+        const now = this.ctx.currentTime;
+
+        // Euphoric Ascending Arpeggio Fanfare (Pentatonic Octave Jump)
+        const arpeggio = combo >= 4 ? [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98, 2093.00] : [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
+        arpeggio.forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            const noteTime = now + idx * 0.04;
+
+            osc.frequency.setValueAtTime(freq, noteTime);
+            gain.gain.setValueAtTime(0.32, noteTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, noteTime + 0.45);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(noteTime);
+            osc.stop(noteTime + 0.45);
+        });
+
+        // Resonant Celestial Sparkle Bell Overtones
+        for (let i = 0; i < 3; i++) {
+            const bellOsc = this.ctx.createOscillator();
+            const bellGain = this.ctx.createGain();
+            bellOsc.type = 'triangle';
+            const bellTime = now + 0.12 + i * 0.05;
+            bellOsc.frequency.setValueAtTime(1760 + i * 440, bellTime);
+            bellGain.gain.setValueAtTime(0.18, bellTime);
+            bellGain.gain.exponentialRampToValueAtTime(0.001, bellTime + 0.5);
+
+            bellOsc.connect(bellGain);
+            bellGain.connect(this.ctx.destination);
+            bellOsc.start(bellTime);
+            bellOsc.stop(bellTime + 0.5);
+        }
+
+        // Sub Bass Punch for deep satisfaction
+        const bassOsc = this.ctx.createOscillator();
+        const bassGain = this.ctx.createGain();
+        bassOsc.type = 'sine';
+        bassOsc.frequency.setValueAtTime(160, now);
+        bassOsc.frequency.exponentialRampToValueAtTime(50, now + 0.28);
+        bassGain.gain.setValueAtTime(0.35, now);
+        bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.30);
+        bassOsc.connect(bassGain);
+        bassGain.connect(this.ctx.destination);
+        bassOsc.start(now);
+        bassOsc.stop(now + 0.30);
     }
 
     playCorrect() {
@@ -3057,6 +3190,12 @@ class ParticleSystem {
         resize();
     }
 
+    clearFX() {
+        this.fxParticles = [];
+        this.confetti = [];
+        this.gems = [];
+    }
+
     initSakura(count) {
         this.sakuraPetals = [];
         const w = window.innerWidth;
@@ -3099,37 +3238,38 @@ class ParticleSystem {
         }
     }
 
-    // 2. Full-Screen Fireworks Show
-    spawnFireworks(burstCount = 6) {
+        // 2. Full-Screen Fireworks Show (Safe Capped Bursts)
+    spawnFireworks(burstCount = 2) {
+        const safeCount = Math.min(3, Math.max(1, burstCount));
         const w = window.innerWidth;
         const h = window.innerHeight;
         const colors = ['#FF4D80', '#00E5FF', '#FFD700', '#A066FF', '#00E676', '#FF85A1', '#FFF'];
 
-        for (let b = 0; b < burstCount; b++) {
+        for (let b = 0; b < safeCount; b++) {
             setTimeout(() => {
-                const targetX = Math.random() * (w * 0.8) + (w * 0.1);
-                const targetY = Math.random() * (h * 0.45) + (h * 0.15);
-                const sparkCount = 45;
+                const targetX = Math.random() * (w * 0.7) + (w * 0.15);
+                const targetY = Math.random() * (h * 0.4) + (h * 0.15);
+                const sparkCount = 30;
                 const burstColor = colors[Math.floor(Math.random() * colors.length)];
 
                 for (let i = 0; i < sparkCount; i++) {
                     const angle = (Math.PI * 2 / sparkCount) * i;
-                    const speed = Math.random() * 6.5 + 2.5;
+                    const speed = Math.random() * 5.0 + 2.0;
                     this.fxParticles.push({
                         x: targetX,
                         y: targetY,
                         vx: Math.cos(angle) * speed,
                         vy: Math.sin(angle) * speed,
-                        size: Math.random() * 7 + 4,
+                        size: Math.random() * 6 + 3,
                         color: Math.random() > 0.3 ? burstColor : '#FFFFFF',
                         opacity: 1,
-                        decay: Math.random() * 0.018 + 0.012,
+                        decay: Math.random() * 0.025 + 0.018,
                         type: 'star',
                         rot: Math.random() * Math.PI * 2,
                         rotSpeed: (Math.random() - 0.5) * 0.2
                     });
                 }
-            }, b * 220);
+            }, b * 180);
         }
     }
 
@@ -3938,7 +4078,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Header Stats
     const heartsCountElems = document.querySelectorAll('.hearts-count-val');
-    const heartTimerElems = document.querySelectorAll('.heart-timer-val');
     const gemsCountElems = document.querySelectorAll('.gems-count-val');
     const sumlinkHeartsCountElems = document.querySelectorAll('.sumlink-hearts-count-val');
     const wordhuntHeartsCountElems = document.querySelectorAll('.wordhunt-hearts-count-val');
@@ -3977,7 +4116,6 @@ document.addEventListener('DOMContentLoaded', () => {
         economy.checkMidnightReset();
         heartsCountElems.forEach(el => { el.textContent = economy.state.hearts; });
         sumlinkHeartsCountElems.forEach(el => { el.textContent = `${economy.state.sumlinkHearts}/3`; });
-        heartTimerElems.forEach(el => { el.textContent = economy.getTimeUntilMidnight(); });
         gemsCountElems.forEach(el => { el.textContent = economy.state.gems; });
         
         if (hubStarsElem) hubStarsElem.textContent = `${economy.totalHubStars}⭐`;
@@ -3988,10 +4126,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     setInterval(() => {
-        heartTimerElems.forEach(el => { el.textContent = economy.getTimeUntilMidnight(); });
-    }, 1000);
+        }, 1000);
 
     function showScreen(screenId) {
+        if (window.particleSystem) window.particleSystem.clearFX();
         [screenHub, screenSudokuLobby, screenSudokuGame, screenMakeSumLobby, screenMakeSumGame, screenWordHuntLobby, screenWordHuntGame].forEach(s => {
             if (s) s.classList.remove('active');
         });
@@ -4050,6 +4188,25 @@ document.addEventListener('DOMContentLoaded', () => {
             showScreen('wordhunt-lobby');
         });
     }
+
+        // In-game Direct Back to Lobby Handlers
+    safeAddListener('btn-sudoku-back', 'click', () => {
+        soundManager.playTileSelect();
+        if (sudokuTimerInterval) clearInterval(sudokuTimerInterval);
+        showScreen('sudoku-lobby');
+    });
+
+    safeAddListener('btn-ms-back', 'click', () => {
+        soundManager.playTileSelect();
+        if (makeSumTimerInterval) clearInterval(makeSumTimerInterval);
+        showScreen('makesum-lobby');
+    });
+
+    safeAddListener('btn-wh-back', 'click', () => {
+        soundManager.playTileSelect();
+        if (wordHuntTimerInterval) clearInterval(wordHuntTimerInterval);
+        showScreen('wordhunt-lobby');
+    });
 
     hubHomeBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -4322,14 +4479,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mascotManager.setState('happy', '정답이에요! 똑똑한 당신 최고! 💖', 2500);
 
             checkSudokuLineComplete(r, c);
-
-            let isComplete = true;
-            for (let i = 0; i < sudokuStageDef.size; i++) {
-                for (let j = 0; j < sudokuStageDef.size; j++) {
-                    if (sudokuCurrentBoard[i][j] !== sudokuSolutionBoard[i][j]) { isComplete = false; break; }
-                }
-            }
-            if (isComplete) triggerEuphoricVictory('sudoku', sudokuStageId);
+            checkSudokuVictory();
         } else {
             soundManager.playWrong();
             sudokuMistakes++;
@@ -4341,6 +4491,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('실수를 3번 하여 게임이 종료되었습니다! 🥺');
                 showScreen('sudoku-lobby');
             }
+        }
+    }
+
+        function checkSudokuVictory() {
+        const size = sudokuStageDef.size;
+        let isComplete = true;
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                if (Number(sudokuCurrentBoard[i][j]) !== Number(sudokuSolutionBoard[i][j]) || sudokuCurrentBoard[i][j] === 0) {
+                    isComplete = false;
+                    break;
+                }
+            }
+            if (!isComplete) break;
+        }
+        if (isComplete) {
+            setTimeout(() => {
+                triggerEuphoricVictory('sudoku', sudokuStageId);
+            }, 250);
         }
     }
 
@@ -4365,6 +4534,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let makeSumSelectedIndices = [];
     let makeSumScore = 0;
     let makeSumCombo = 0;
+    let makeSumLastMatchTime = 0;
+    let makeSumComboResetTimer = null;
+    const COMBO_WINDOW_MS = 3000; // 3초 이내 연속 매칭 시에만 콤보 유지!
     let makeSumTimerInterval = null;
     let makeSumElapsedSeconds = 0;
     let makeSumIsPaused = false;
@@ -4500,6 +4672,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         makeSumScore = 0;
         makeSumCombo = 0;
+        makeSumLastMatchTime = 0;
+        if (makeSumComboResetTimer) { clearTimeout(makeSumComboResetTimer); makeSumComboResetTimer = null; }
         makeSumSelectedIndices = [];
         makeSumItemMode = null;
         makeSumUndoStack = [];
@@ -4545,8 +4719,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         document.getElementById('badge-ms-hint').textContent = economy.state.makesum.items.hints;
         document.getElementById('badge-ms-bomb').textContent = economy.state.makesum.items.bombs;
-        document.getElementById('badge-ms-rocket').textContent = economy.state.makesum.items.rockets;
-    }
+        }
 
     function renderMakeSumGrid() {
         makeSumGrid.innerHTML = '';
@@ -4564,19 +4737,31 @@ document.addEventListener('DOMContentLoaded', () => {
         resizeMakeSumCanvas();
     }
 
+            function triggerComboPopup(title, points, animClass, combo) {
+        const popup = document.getElementById('ms-combo-popup');
+        if (popup) {
+            popup.textContent = `${title} (+${points}점)`;
+            popup.className = `combo-popup-banner ${animClass}`;
+            setTimeout(() => {
+                if (popup) popup.className = 'combo-popup-banner';
+            }, 1100);
+        }
+
+        if (combo >= 3) {
+            particleSystem.spawnFireworks(2);
+            if (appWrapper) {
+                appWrapper.classList.add('euphoria-screen-glow');
+                setTimeout(() => { if (appWrapper) appWrapper.classList.remove('euphoria-screen-glow'); }, 1000);
+            }
+        }
+    }
+
     function onMakeSumTileClick(idx, tileElem) {
         if (idx >= makeSumCells.length || makeSumCells[idx].cleared) return;
 
         // 1. Bomb Item Mode
         if (makeSumItemMode === 'bomb') {
             triggerBombAt(idx);
-            makeSumItemMode = null;
-            return;
-        }
-
-        // 2. Rocket Item Mode
-        if (makeSumItemMode === 'rocket') {
-            triggerRocketAt(idx);
             makeSumItemMode = null;
             return;
         }
@@ -4606,23 +4791,72 @@ document.addEventListener('DOMContentLoaded', () => {
         if (evalResult && evalResult.valid === true) {
             // STRICT SUCCESSFUL MATCH (Sum == Target)
             drawMultiBeams(evalResult);
-            makeSumCombo++;
+
+            const now = Date.now();
+            if (makeSumLastMatchTime > 0 && (now - makeSumLastMatchTime) <= COMBO_WINDOW_MS) {
+                // 3초 이내에 연속으로 바로 풀었을 때만 콤보 증가!
+                makeSumCombo++;
+            } else {
+                // 3초가 넘었거나 첫 성공일 때는 콤보 1부터 시작
+                makeSumCombo = 1;
+            }
+            makeSumLastMatchTime = now;
+
+            // 3초 후 콤보 자동 소멸 타이머 시작
+            if (makeSumComboResetTimer) clearTimeout(makeSumComboResetTimer);
+            makeSumComboResetTimer = setTimeout(() => {
+                makeSumCombo = 0;
+                makeSumLastMatchTime = 0;
+            }, COMBO_WINDOW_MS);
+
             soundManager.playMatchCombo(makeSumCombo);
 
             const is3Tiles = makeSumSelectedIndices.length === 3;
-            const points = is3Tiles ? (250 + (makeSumCombo - 1) * 50) : (100 + (makeSumCombo - 1) * 25);
+            let basePoints = is3Tiles ? 250 : 100;
+            let comboBonus = 0;
+            let comboMultiplier = 1.0;
+            let comboTitle = '';
+            let comboAnimClass = '';
+
+            if (makeSumCombo === 1) {
+                comboMultiplier = 1.0;
+                comboBonus = 0;
+            } else if (makeSumCombo === 2) {
+                comboMultiplier = 1.5;
+                comboBonus = 50;
+                comboTitle = '🔥 2 COMBO!';
+                comboAnimClass = 'active-combo-2';
+            } else if (makeSumCombo === 3) {
+                comboMultiplier = 2.0;
+                comboBonus = 300; // ⚡ 3연속 콤보 대박 보너스!
+                comboTitle = '⚡ 3 MEGA COMBO!';
+                comboAnimClass = 'active-combo-3';
+            } else {
+                comboMultiplier = 2.5;
+                comboBonus = 500; // 👑 슈퍼 피버 보너스!
+                comboTitle = `👑 ${makeSumCombo} SUPER FEVER!`;
+                comboAnimClass = 'active-combo-fever';
+            }
+
+            const points = Math.round(basePoints * comboMultiplier) + comboBonus;
             makeSumScore += points;
             makeSumScoreElem.textContent = makeSumScore.toLocaleString();
 
+            if (makeSumCombo >= 2) {
+                triggerComboPopup(comboTitle, points, comboAnimClass, makeSumCombo);
+            }
+
             if (makeSumLiveFormulaElem) {
                 const formula = makeSumSelectedIndices.map(i => makeSumCells[i].val).join(' + ');
-                makeSumLiveFormulaElem.textContent = `🎉 [ ${formula} = ${evalResult.sum} 🎯 성공! (+${points}점) ]`;
+                const comboTag = makeSumCombo >= 2 ? ` [${comboTitle}]` : '';
+                makeSumLiveFormulaElem.textContent = `🎉 [ ${formula} = ${evalResult.sum} 🎯 성공! (+${points}점)${comboTag} ]`;
             }
             if (makeSumLivePillElem) makeSumLivePillElem.className = 'target-live-sum-pill pill-success';
 
             makeSumSelectedIndices.forEach(ti => {
                 const rect = makeSumGrid.children[ti].getBoundingClientRect();
-                particleSystem.spawnSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2, 14);
+                const sparkCount = makeSumCombo >= 3 ? 24 : 14;
+                particleSystem.spawnSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2, sparkCount);
                 makeSumGrid.children[ti].classList.add('pop-out');
             });
 
@@ -4641,7 +4875,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearConnectionLine();
                 updateLiveFormula();
 
-                mascotManager.setState('happy', is3Tiles ? `3단 썸링크 대성공! 💖 (+${points}점)` : (makeSumCombo > 1 ? `${makeSumCombo}연속 썸링크 콤보! 🌸` : '썸링크 성공! ✨'), 2000);
+                if (makeSumCombo === 2) {
+                    mascotManager.setState('happy', `멋져요! 2연속 썸링크 콤보! 🔥✨ (+${points}점)`, 2200);
+                } else if (makeSumCombo === 3) {
+                    mascotManager.setState('cheer', `대단해요! 3연속 메가 콤보 대폭발!! ⚡👑💖 (+${points}점)`, 2600);
+                } else if (makeSumCombo >= 4) {
+                    mascotManager.setState('cheer', `멈출 수 없는 두뇌 천재! ${makeSumCombo}연속 슈퍼 피버!! 🌟🔥👑 (+${points}점)`, 3000);
+                } else {
+                    mascotManager.setState('happy', is3Tiles ? `3단 썸링크 대성공! 💖 (+${points}점)` : '썸링크 성공! ✨ (+100점)', 2000);
+                }
 
                 checkMakeSumVictory();
                 checkMakeSumNoMoreMoves();
@@ -4657,6 +4899,10 @@ document.addEventListener('DOMContentLoaded', () => {
             soundManager.playWrong();
             tileElem.classList.add('shake');
             makeSumCombo = 0;
+            makeSumLastMatchTime = 0;
+            if (makeSumComboResetTimer) { clearTimeout(makeSumComboResetTimer); makeSumComboResetTimer = null; }
+        makeSumLastMatchTime = 0;
+        if (makeSumComboResetTimer) { clearTimeout(makeSumComboResetTimer); makeSumComboResetTimer = null; }
             if (makeSumLiveFormulaElem) makeSumLiveFormulaElem.textContent = '❌ 길이 막혔거나 목표 합과 맞지 않아요!';
             if (makeSumLivePillElem) makeSumLivePillElem.className = 'target-live-sum-pill';
 
@@ -4912,7 +5158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // When 0 items remain, ask user explicitly if they want to buy with 20 gems
         if (economy.state.gems >= 20) {
-            const itemNames = { adds: '숫자 추가 ➕', hints: '힌트 💡', bombs: '폭탄 💣', rockets: '로켓 🚀' };
+            const itemNames = { adds: '숫자 추가 ➕', hints: '힌트 💡', bombs: '폭탄 💣' };
             const name = itemNames[itemType] || '아이템';
             const ok = confirm(`[${name}] 아이템이 0개입니다.\n보석 20개(💎)를 사용하여 1회 구매할까요?`);
             if (ok) {
@@ -5010,28 +5256,6 @@ document.addEventListener('DOMContentLoaded', () => {
         checkMakeSumVictory();
     }
 
-    safeAddListener('btn-ms-rocket', 'click', () => {
-        executeItemUsage('rockets', () => {
-            soundManager.playTileSelect();
-            makeSumItemMode = 'rocket';
-            mascotManager.setState('thinking', '관통하고 싶은 행 또는 열의 숫자를 터치하세요! 🚀');
-        });
-    });
-
-    function triggerRocketAt(idx) {
-        soundManager.playRocketWhoosh();
-        const cols = makeSumEngine.cols;
-        const r = Math.floor(idx / cols);
-        for (let c = 0; c < cols; c++) {
-            const checkIdx = r * cols + c;
-            if (checkIdx < makeSumCells.length) makeSumCells[checkIdx].cleared = true;
-        }
-        particleSystem.spawnSparkles(window.innerWidth / 2, window.innerHeight * 0.45, 30);
-        renderMakeSumGrid();
-        mascotManager.setState('happy', '슝! 한 줄 전체를 로켓으로 관통 제거 완료! 🚀✨');
-        checkMakeSumVictory();
-    }
-
     safeAddListener('btn-ms-undo', 'click', () => {
         if (makeSumUndoStack.length > 0) {
             soundManager.playTileSelect();
@@ -5099,6 +5323,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     safeAddListener('btn-hint', 'click', () => {
+        if (!sudokuSelectedCell) {
+            const size = sudokuStageDef.size;
+            for (let hr = 0; hr < size; hr++) {
+                for (let hc = 0; hc < size; hc++) {
+                    if (sudokuInitialBoard[hr][hc] === 0 && sudokuCurrentBoard[hr][hc] !== sudokuSolutionBoard[hr][hc]) {
+                        sudokuSelectedCell = { r: hr, c: hc };
+                        break;
+                    }
+                }
+                if (sudokuSelectedCell) break;
+            }
+        }
         if (!sudokuSelectedCell) return;
         const { r, c } = sudokuSelectedCell;
         if (sudokuInitialBoard[r][c] === 0 && sudokuCurrentBoard[r][c] !== sudokuSolutionBoard[r][c]) {
@@ -5107,6 +5343,8 @@ document.addEventListener('DOMContentLoaded', () => {
             sudokuNotesBoard[r][c].clear();
             renderSudokuGrid();
             particleSystem.spawnSparkles(window.innerWidth / 2, window.innerHeight / 2, 20);
+            checkSudokuLineComplete(r, c);
+            checkSudokuVictory();
         }
     });
 
@@ -5398,7 +5636,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const expectedChar = wordHuntPuzzleData.letters[wordHuntExpectedLetterIdx];
 
-        if (cell.isTarget && cell.targetOrder === wordHuntExpectedLetterIdx && cell.char === expectedChar) {
+        // Match if clicked tile character matches expected character!
+        if (cell.char === expectedChar) {
             // SUCCESSFUL LETTER MATCH!
             cell.found = true;
             wordHuntExpectedLetterIdx++;
@@ -5476,14 +5715,20 @@ document.addEventListener('DOMContentLoaded', () => {
     safeAddListener('btn-wh-hint', 'click', () => {
         executeWordHuntItemUsage('hints', () => {
             soundManager.playGem();
-            const hintPos = wordHuntPuzzleData.targetPositions[wordHuntExpectedLetterIdx];
-            if (whGrid.children[hintPos]) {
-                whGrid.children[hintPos].classList.add('hint-pulse');
+            const expectedChar = wordHuntPuzzleData.letters[wordHuntExpectedLetterIdx];
+            let hintIdx = -1;
+            wordHuntPuzzleData.cells.forEach((c, idx) => {
+                if (c.char === expectedChar && !c.found && hintIdx === -1) {
+                    hintIdx = idx;
+                }
+            });
+            if (hintIdx !== -1 && whGrid.children[hintIdx]) {
+                whGrid.children[hintIdx].classList.add('hint-pulse');
                 setTimeout(() => {
-                    if (whGrid.children[hintPos]) whGrid.children[hintPos].classList.remove('hint-pulse');
+                    if (whGrid.children[hintIdx]) whGrid.children[hintIdx].classList.remove('hint-pulse');
                 }, 3000);
             }
-            mascotManager.setState('happy', `반짝이는 칸에 [ ${wordHuntPuzzleData.letters[wordHuntExpectedLetterIdx]} ] 가 있어요! 💡`);
+            mascotManager.setState('happy', `반짝이는 칸에 [ ${expectedChar} ] 가 있어요! 💡`);
         });
     });
 
@@ -5500,10 +5745,11 @@ document.addEventListener('DOMContentLoaded', () => {
     safeAddListener('btn-wh-bomb', 'click', () => {
         executeWordHuntItemUsage('bombs', () => {
             soundManager.playBombBoom();
-            // Clear 4 random decoy cells
+            // Clear decoy cells that are not target characters
+            const bombTargetChar = wordHuntPuzzleData.letters[wordHuntExpectedLetterIdx];
             let clearedCount = 0;
             wordHuntPuzzleData.cells.forEach((cell, idx) => {
-                if (!cell.isTarget && !cell.found && clearedCount < 5) {
+                if (cell.char !== bombTargetChar && !cell.found && clearedCount < 6) {
                     cell.found = true;
                     if (whGrid.children[idx]) {
                         whGrid.children[idx].style.opacity = '0.2';
@@ -5520,10 +5766,16 @@ document.addEventListener('DOMContentLoaded', () => {
     safeAddListener('btn-wh-skip', 'click', () => {
         executeWordHuntItemUsage('skips', () => {
             soundManager.playGem();
-            const skipPos = wordHuntPuzzleData.targetPositions[wordHuntExpectedLetterIdx];
-            const targetCell = wordHuntPuzzleData.cells[skipPos];
-            if (targetCell && whGrid.children[skipPos]) {
-                onWordHuntTileClick(skipPos, targetCell, whGrid.children[skipPos]);
+            const skipTargetChar = wordHuntPuzzleData.letters[wordHuntExpectedLetterIdx];
+            let skipIdx = -1;
+            wordHuntPuzzleData.cells.forEach((c, idx) => {
+                if (c.char === skipTargetChar && !c.found && skipIdx === -1) {
+                    skipIdx = idx;
+                }
+            });
+            if (skipIdx !== -1 && whGrid.children[skipIdx]) {
+                const targetCell = wordHuntPuzzleData.cells[skipIdx];
+                onWordHuntTileClick(skipIdx, targetCell, whGrid.children[skipIdx]);
             }
         });
     });
