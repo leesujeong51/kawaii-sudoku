@@ -1,34 +1,120 @@
 /* Animations */
-@keyframes floatMascot {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-6px) rotate(1.5deg); }
-}
 @keyframes bounceMascot {
-    0%, 100% { transform: translateY(0) scale(1); }
-    30% { transform: translateY(-10px) scale(1.05); }
-    60% { transform: translateY(2px) scale(0.95); }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
 }
+
+@keyframes floatMascot {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
 @keyframes cheerMascot {
-    0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
-    25% { transform: translateY(-14px) scale(1.12) rotate(-4deg); }
-    50% { transform: translateY(-18px) scale(1.15) rotate(4deg); }
-    75% { transform: translateY(-8px) scale(1.08) rotate(-2deg); }
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.15) rotate(-6deg); }
+    75% { transform: scale(1.15) rotate(6deg); }
 }
+
 @keyframes wobbleMascot {
-    0%, 100% { transform: rotate(0deg); }
-    20% { transform: rotate(-8deg) translateX(-4px); }
-    40% { transform: rotate(8deg) translateX(4px); }
-    60% { transform: rotate(-6deg) translateX(-2px); }
-    80% { transform: rotate(6deg) translateX(2px); }
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
 }
-@keyframes popIn {
-    0% { transform: scale(0.7); opacity: 0; }
-    70% { transform: scale(1.08); opacity: 1; }
+
+@keyframes bubblePop {
+    0% { transform: scale(0.85); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
 }
 
-.mascot-float { animation: floatMascot 3s ease-in-out infinite; }
-.mascot-bounce { animation: bounceMascot 1s cubic-bezier(0.34, 1.56, 0.64, 1) infinite; }
-.mascot-cheer { animation: cheerMascot 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 2; }
-.mascot-wobble { animation: wobbleMascot 0.6s ease-in-out; }
-.bubble-pop { animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.mascot-bounce { animation: bounceMascot 0.8s infinite ease-in-out; }
+.mascot-float { animation: floatMascot 2.5s infinite ease-in-out; }
+.mascot-cheer { animation: cheerMascot 0.6s infinite ease-in-out; }
+.mascot-wobble { animation: wobbleMascot 0.5s ease-in-out; }
+.bubble-pop { animation: bubblePop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+/* Euphoric 3-Star Slam Animation */
+.star-slam-anim {
+    display: inline-block;
+    opacity: 0;
+    transform: scale(3.5) translateY(-50px) rotate(-25deg);
+    transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.star-slam-anim.slammed {
+    opacity: 1;
+    transform: scale(1) translateY(0) rotate(0deg);
+}
+
+/* Screen Rainbow Euphoria Glow Pulse */
+.euphoria-screen-glow {
+    animation: rainbowGlowPulse 1.2s ease-out;
+}
+@keyframes rainbowGlowPulse {
+    0% { box-shadow: inset 0 0 0 8px #FF6584, 0 0 50px rgba(255, 101, 132, 0.8); }
+    33% { box-shadow: inset 0 0 0 10px #FFD166, 0 0 60px rgba(255, 209, 102, 0.9); }
+    66% { box-shadow: inset 0 0 0 8px #38BDF8, 0 0 50px rgba(56, 189, 248, 0.8); }
+    100% { box-shadow: 0 20px 48px rgba(255, 101, 132, 0.28); }
+}
+
+/* =========================================================
+   JUICY CONSECUTIVE COMBO POPUP ANIMATIONS (TOP HUD POSITION)
+   ========================================================= */
+.combo-popup-banner {
+    position: absolute;
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    z-index: 100;
+    pointer-events: none !important;
+    font-size: 1.15rem;
+    font-weight: 900;
+    padding: 6px 20px;
+    border-radius: 999px;
+    color: #FFFFFF;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 4px 18px rgba(255, 77, 128, 0.45);
+    border: 2.5px solid #FFFFFF;
+    opacity: 0;
+    white-space: nowrap;
+    transition: none;
+}
+
+.combo-popup-banner.active-combo-2 {
+    background: linear-gradient(135deg, #FF8DA1 0%, #FF5A7D 100%);
+    animation: topComboPop 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.combo-popup-banner.active-combo-3 {
+    background: linear-gradient(135deg, #F59E0B 0%, #EF4444 50%, #EC4899 100%);
+    font-size: 1.25rem;
+    animation: topMegaComboPop 1.05s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.combo-popup-banner.active-combo-fever {
+    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 50%, #F59E0B 100%);
+    font-size: 1.35rem;
+    animation: topFeverComboPop 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes topComboPop {
+    0% { transform: translateX(-50%) scale(0.6); opacity: 0; }
+    22% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+    38% { transform: translateX(-50%) scale(1.0); opacity: 1; }
+    75% { transform: translateX(-50%) scale(1.0) translateY(-4px); opacity: 1; }
+    100% { transform: translateX(-50%) scale(0.9) translateY(-16px); opacity: 0; }
+}
+
+@keyframes topMegaComboPop {
+    0% { transform: translateX(-50%) scale(0.5); opacity: 0; filter: brightness(1.8); }
+    22% { transform: translateX(-50%) scale(1.18); opacity: 1; filter: brightness(1.4); }
+    38% { transform: translateX(-50%) scale(1.0); opacity: 1; filter: brightness(1); }
+    75% { transform: translateX(-50%) scale(1.0) translateY(-6px); opacity: 1; }
+    100% { transform: translateX(-50%) scale(0.9) translateY(-20px); opacity: 0; }
+}
+
+@keyframes topFeverComboPop {
+    0% { transform: translateX(-50%) scale(0.5); opacity: 0; filter: brightness(2.2); }
+    22% { transform: translateX(-50%) scale(1.22); opacity: 1; filter: brightness(1.5); }
+    38% { transform: translateX(-50%) scale(1.0); opacity: 1; filter: brightness(1); }
+    75% { transform: translateX(-50%) scale(1.0) translateY(-8px); opacity: 1; }
+    100% { transform: translateX(-50%) scale(0.9) translateY(-24px); opacity: 0; }
+}
